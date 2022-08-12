@@ -1,0 +1,63 @@
+{
+  "name": "stepsize-pr-api",
+  "version": "1.0.0",
+  "description": "Stepsize Pull Requests API",
+  "main": "bin/start.js",
+  "files": [
+    "build"
+  ],
+  "scripts": {
+    "start": "node bin/start.js",
+    "build": "rm -rf build && tsc -p tsconfig.prod.json",
+    "dev": "nodemon --config .nodemonrc",
+    "lint": "eslint .",
+    "lint:fix": "npm run lint -- --fix",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm run tag",
+    "dependencies:purge": "rm -rf node_modules package-lock.json && npm install",
+    "dependencies:purge:prod": "rm -rf node_modules package-lock.json build && npm install --only=prod && npm run prepare",
+    "tag": "npm run update-version && TAG=v$(node -pe \"require('./package.json').version\"); git commit -am \"🔖 $TAG\" && git tag $TAG && npm run docs:update && git push && git push --tags",
+    "test": "jest --verbose --runInBand",
+    "test:coverage": "npm test -- --coverage",
+    "docs:generate": "auto-changelog -p; rm -rf docs docs-html && typedoc lib/ --plugin typedoc-plugin-markdown --out docs && git add docs CHANGELOG.md",
+    "docs:serve": "typedoc lib/ --plugin none --out docs-html && npx serve docs-html",
+    "docs:update": "npm run docs:generate && git commit -m \"📝 update docs\"",
+    "update-version": "echo \"export default '$(node -pe \"require('./package.json').version\")'\" && scripts/updateMakefileVersion.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@bitbucket.org/dominioncommercial/ts-api-boilerplate.git"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "keywords": [],
+  "author": "Julia Polbach <juliapolbach@gmail.com>",
+  "homepage": "",
+  "dependencies": {
+    "@fastify/swagger": "^7.4.1",
+    "@types/node": "14.6.1",
+    "dotenv": "10.0.0",
+    "fastify": "^4.4.0",
+    "fastify-healthcheck": "^4.1.0",
+    "p-map": "4.0.0",
+    "reflect-metadata": "0.1.13",
+    "tsyringe": "^4.7.0",
+    "typescript": "4.6.2"
+  },
+  "devDependencies": {
+    "@types/jest": "27.0.2",
+    "@typescript-eslint/eslint-plugin": "4.16.1",
+    "@typescript-eslint/parser": "4.16.1",
+    "eslint": "7.21.0",
+    "eslint-config-standard": "16.0.2",
+    "eslint-plugin-import": "2.22.1",
+    "eslint-plugin-node": "11.1.0",
+    "eslint-plugin-promise": "4.3.1",
+    "jest": "27.2.4",
+    "nodemon": "2.0.15",
+    "ts-jest": "27.0.5",
+    "typedoc": "0.22.13",
+    "typedoc-plugin-markdown": "3.11.14"
+  }
+}
