@@ -1,4 +1,4 @@
-# Stepsize Pull Requests API
+# **Stepsize Pull Requests API**
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 

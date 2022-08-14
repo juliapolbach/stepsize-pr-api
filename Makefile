@@ -1,6 +1,6 @@
 name_image = stepsize-pr-api
 name_container = stepsize-pr-api
-network = stepsize
+network = stepsize-network
 tag = 1.0.0
 # build and execute container to develop in local
 local:
