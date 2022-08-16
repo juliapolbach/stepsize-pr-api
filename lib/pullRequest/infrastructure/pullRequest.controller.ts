@@ -13,11 +13,12 @@ export class PullRequestController {
   constructor (@inject(PullRequestService) private documentService: PullRequestService) {
   }
 
-  get (request: FastifyRequest<{Params: {param: string, value?: string }, Querystring: any }>, reply: FastifyReply): Promise<void> {
-    return this.getPullRequest(request.body, request, reply)
+  getPullRequestsByRepositoryName (request: FastifyRequest<{Params: {param: string, value?: string }, Querystring: any }>, reply: FastifyReply): Promise<void> {
+    console.debug(request.query)
+    return this.getPullRequest(request, reply)
   }
 
-  private async getPullRequest (data: any, request: Request, reply: FastifyReply): Promise<void> {
+  private async getPullRequest (request: Request, reply: FastifyReply): Promise<void> {
     try {
       const response = 'DUMMY RESPONSE'
       reply.status(200).send({

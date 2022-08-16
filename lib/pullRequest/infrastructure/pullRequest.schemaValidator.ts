@@ -9,9 +9,7 @@ const errorResponse = {
 }
 
 const params = {
-  param: { type: 'string' },
-  // TODO: According to README this rest param should be optional
-  value: { type: 'string' }
+  param: { type: 'string' }
 }
 
 const headers = {
@@ -72,6 +70,12 @@ export const SchemaValidatorGet = {
   params,
   headers,
   response: schemaResponse
+}
+
+export const SchemaValidatorWithParam = {
+  querystring: {
+    name: { type: 'string' }
+  }
 }
 
 export const SchemaValidatorPost = {
