@@ -18,7 +18,7 @@ export const buildTestServer = (): ServerTestInstance => {
     server,
     database,
     finishServer: async () => {
-      await database.end()
+      // await database.end()
       await server.close()
     }
   }
