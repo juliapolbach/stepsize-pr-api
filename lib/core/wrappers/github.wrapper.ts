@@ -44,17 +44,7 @@ export class GithubWrapper implements CodeHostingProviderAPIWrapper {
     for (const rawPullRequest of response.data) {
       const isMergeable = await this.isMergeable({ repoName, pullRequestId: rawPullRequest.number })
 
-      pullRequestList.push({
-        id: rawPullRequest.id,
-        repository: {
-          name: repoName
-        },
-        title: rawPullRequest.title,
-        description: rawPullRequest.body,
-        isMergeable,
-        status: rawPullRequest.state,
-        createdAt: rawPullRequest.created_at
-      })
+      pullRequestList.push(this.mapPullRequest(rawPullRequest.data, repoName, isMergeable))
     }
 
     return pullRequestList
