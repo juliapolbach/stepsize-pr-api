@@ -1,16 +1,16 @@
 import { injectable } from 'tsyringe'
 import { Octokit } from 'octokit'
 import { GithubPullRequest, MergePullRequestResponse, PullRequest, PullRequestIdentifier } from './types'
-import { CodeHostingProviderAPIWrapper } from './codeHostingProviderAPIWrapper'
+import { WrapperInterface } from './wrapper.interface'
 
 require('dotenv').config()
 
 @injectable()
-export class GithubWrapper implements CodeHostingProviderAPIWrapper {
+export class GithubWrapper implements WrapperInterface {
   private octokit
 
   constructor () {
-    this.octokit = new Octokit({ auth: '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' })
+    this.octokit = new Octokit({ auth: process.env.GITHUB_API })
   }
 
   async checkAuth (): Promise<string> {

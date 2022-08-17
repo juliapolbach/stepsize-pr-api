@@ -1,11 +1,11 @@
 import { injectable } from 'tsyringe'
 import { MockBitbucketClient, BitbucketPullRequest, PullRequestIdentifier } from '../../bitbucketMockAPI'
-import { CodeHostingProviderAPIWrapper } from './codeHostingProviderAPIWrapper'
+import { WrapperInterface } from './wrapper.interface'
 import { MergePullRequestResponse, PullRequest } from './types'
 require('dotenv').config()
 
 @injectable()
-export class BitbucketWrapper implements CodeHostingProviderAPIWrapper {
+export class BitbucketWrapper implements WrapperInterface {
   async checkAuth (): Promise<string> {
     return `Hello, ${process.env.OWNER}`
   }
