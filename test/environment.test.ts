@@ -1,4 +1,4 @@
-import { Environment } from '../../lib/core/environment'
+import { Environment } from '../lib/core/environment'
 
 describe('Environment should', () => {
   it('check Node environment is not at production', () => {

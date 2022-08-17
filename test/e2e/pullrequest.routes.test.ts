@@ -5,7 +5,7 @@ describe('PullRequest routes:', () => {
   const { server, finishServer } = buildTestServer()
 
   const requestGetOptions: InjectOptions = {
-    url: '/api/pullrequest?repositoryName=dummy',
+    url: '/api/pullrequest?repositoryName=repository-1',
     method: 'GET',
     headers: {
       token: 'STEPSIZE'
@@ -22,7 +22,7 @@ describe('PullRequest routes:', () => {
 
       expect(response.statusCode).toBe(200)
       expect(body.statusCode).toBe(200)
-      expect(body.message).toContain('Boilerplate API')
+      expect(body.message).toContain('repository-1')
     })
   })
 })
