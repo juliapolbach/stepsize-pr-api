@@ -10,17 +10,19 @@ type Request = FastifyRequest<{Params: {param: string, value?: string }, Queryst
 
 @injectable()
 export class PullRequestController {
-  constructor (@inject(PullRequestService) private documentService: PullRequestService) {
+  constructor (@inject(PullRequestService) private pullRequestService: PullRequestService) {
   }
 
   getPullRequestsByRepositoryName (request: FastifyRequest<{Params: {param: string, value?: string }, Querystring: any }>, reply: FastifyReply): Promise<void> {
-    console.debug(request.query)
     return this.getPullRequest(request, reply)
   }
 
   private async getPullRequest (request: Request, reply: FastifyReply): Promise<void> {
+    // @ts-ignore
+    const repositoryName: string = request.query.repositoryName
     try {
-      const response = 'DUMMY RESPONSE'
+      const response = await this.pullRequestService.getPullRequests(repositoryName)
+
       reply.status(200).send({
         statusCode: 200,
         message: response
