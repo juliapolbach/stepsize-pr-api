@@ -1,9 +1,9 @@
 import { singleton } from 'tsyringe'
-import mysql, { Pool } from 'mysql2'
+import mysql, { Pool } from 'mysql2/promise.js'
 
 @singleton()
 export class MySQLDatasource {
-  private pool: Pool
+  pool: Pool
 
   constructor () {
     this.pool = mysql.createPool({
