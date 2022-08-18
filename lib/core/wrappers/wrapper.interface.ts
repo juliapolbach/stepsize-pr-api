@@ -1,4 +1,5 @@
-import { MergePullRequestResponse, PullRequest, PullRequestIdentifier } from './types'
+import { MergePullRequestResponse, PullRequestIdentifier } from './types'
+import { PullRequest } from '../../pullRequest/domain/models/pullRequestTypes'
 
 export interface WrapperInterface {
   checkAuth(): Promise<string>

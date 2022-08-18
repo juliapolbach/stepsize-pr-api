@@ -1,7 +1,9 @@
 import { injectable } from 'tsyringe'
 import { Octokit } from 'octokit'
-import { GithubPullRequest, MergePullRequestResponse, PullRequest, PullRequestIdentifier } from './types'
+import { MergePullRequestResponse, PullRequestIdentifier } from './types'
 import { WrapperInterface } from './wrapper.interface'
+import { PullRequest } from '../../pullRequest/domain/models/pullRequestTypes'
+import { Helper } from '../helper'
 
 require('dotenv').config()
 
@@ -29,7 +31,7 @@ export class GithubWrapper implements WrapperInterface {
 
     const isMergeable = await this.isMergeable({ repoName: id.repoName, pullRequestId: id.pullRequestId })
 
-    return this.mapPullRequest(rawPullRequest.data, id.repoName, isMergeable)
+    return Helper.mapGithubPullRequest(rawPullRequest.data, id.repoName, isMergeable)
   }
 
   async getPullRequestListByRepositoryName (repoName: string): Promise<PullRequest[]> {
@@ -43,7 +45,7 @@ export class GithubWrapper implements WrapperInterface {
 
     for (const rawPullRequest of response.data) {
       const isMergeable = await this.isMergeable({ repoName, pullRequestId: rawPullRequest.number })
-      pullRequestList.push(this.mapPullRequest(rawPullRequest, repoName, isMergeable))
+      pullRequestList.push(Helper.mapGithubPullRequest(rawPullRequest, repoName, isMergeable))
     }
 
     return pullRequestList
@@ -65,19 +67,5 @@ export class GithubWrapper implements WrapperInterface {
     })
 
     return response.data.mergeable
-  }
-
-  mapPullRequest (rawPullRequest: GithubPullRequest, repoName: string, isMergeable: boolean): PullRequest {
-    return {
-      id: rawPullRequest.id,
-      repository: {
-        name: repoName
-      },
-      title: rawPullRequest.title,
-      description: rawPullRequest.body,
-      isMergeable,
-      status: rawPullRequest.state,
-      createdAt: rawPullRequest.created_at
-    }
   }
 }

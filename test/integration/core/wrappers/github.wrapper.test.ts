@@ -1,5 +1,4 @@
 import { GithubWrapper } from '../../../../lib/core/wrappers/github.wrapper'
-import { MergePullRequestResponse } from '../../../../lib/core/wrappers/types'
 
 describe('Github Wrapper should', () => {
   it('correctly authenticate', async () => {
