@@ -17,7 +17,8 @@ CREATE TABLE stepsize.pull_request (
                                      title varchar(250) NOT NULL,
                                      status ENUM('open','closed','merged') NOT NULL,
                                      creation_date DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
-                                     last_updated DATETIME NOT NULL,
+                                     last_updated datetime DEFAULT CURRENT_TIMESTAMP,
+                                     description varchar(250) DEFAULT NULL,
                                      CONSTRAINT `FK_D79005394F143414` FOREIGN KEY (`repository`) REFERENCES `repository` (id),
                                      PRIMARY KEY (`code_hosting_provider`,`pull_request_number`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
