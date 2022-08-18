@@ -72,8 +72,8 @@ function registerApiDocs (fastify: FastifyInstance, options: ServerOptions) {
   fastify.register(require('@fastify/swagger'), {
     swagger: {
       info: {
-        title: 'Alterna Boilerplate API',
-        description: 'Template to create nodejs API projects with TypeScript.',
+        title: 'Stepsize Pull Requests API',
+        description: 'An API to track multiple code hosting providers\' PRs.',
         version: process.env.npm_package_version
       },
       schemes: ['https'],
