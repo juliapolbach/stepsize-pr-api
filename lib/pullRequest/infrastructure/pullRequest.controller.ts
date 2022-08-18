@@ -25,7 +25,7 @@ export class PullRequestController {
 
       reply.status(200).send({
         statusCode: 200,
-        message: response
+        data: response
       })
       request.log.info('OK')
     } catch (error: any) {
