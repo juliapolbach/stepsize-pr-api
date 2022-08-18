@@ -3,6 +3,6 @@
 import 'reflect-metadata'
 
 // Little fix for Jest for unrecognized encoding
-require('mysql2/node_modules/iconv-lite').encodingExists('foo')
+require('iconv-lite').encodingExists('foo')
 
 console.log = () => {}

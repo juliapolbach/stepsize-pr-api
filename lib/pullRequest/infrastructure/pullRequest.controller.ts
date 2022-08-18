@@ -1,6 +1,6 @@
 import { inject, injectable } from 'tsyringe'
 import { FastifyReply, FastifyRequest } from 'fastify'
-import { PullRequestService } from '../domain/pullRequestService'
+import { GetTrackedPullRequest } from '../application/getTrackedPullRequest.case'
 
 type Request = FastifyRequest<{Params: {param: string, value?: string }, Querystring: any }>
 
@@ -10,7 +10,9 @@ type Request = FastifyRequest<{Params: {param: string, value?: string }, Queryst
 
 @injectable()
 export class PullRequestController {
-  constructor (@inject(PullRequestService) private pullRequestService: PullRequestService) {
+  constructor (
+    @inject(GetTrackedPullRequest) private getTrackedPullRequest: GetTrackedPullRequest
+  ) {
   }
 
   getPullRequestsByRepositoryName (request: FastifyRequest<{Params: {param: string, value?: string }, Querystring: any }>, reply: FastifyReply): Promise<void> {
@@ -18,10 +20,8 @@ export class PullRequestController {
   }
 
   private async getPullRequest (request: Request, reply: FastifyReply): Promise<void> {
-    // @ts-ignore
-    const repositoryName: string = request.query.repositoryName
     try {
-      const response = await this.pullRequestService.getPullRequests(repositoryName)
+      const response = await this.getTrackedPullRequest.exec()
 
       reply.status(200).send({
         statusCode: 200,

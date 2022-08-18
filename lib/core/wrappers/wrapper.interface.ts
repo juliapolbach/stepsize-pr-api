@@ -1,6 +1,7 @@
-import { MergePullRequestResponse, PullRequest, PullRequestIdentifier } from './types'
+import { MergePullRequestResponse, PullRequestIdentifier } from './types'
+import { PullRequest } from '../../pullRequest/domain/models/pullRequestTypes'
 
-export interface CodeHostingProviderAPIWrapper {
+export interface WrapperInterface {
   checkAuth(): Promise<string>
   getPullRequestById(id: PullRequestIdentifier): Promise<PullRequest>
   getPullRequestListByRepositoryName(repositoryName: string): Promise<PullRequest[]>

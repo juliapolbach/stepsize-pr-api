@@ -1,16 +1,18 @@
 import { injectable } from 'tsyringe'
 import { Octokit } from 'octokit'
-import { GithubPullRequest, MergePullRequestResponse, PullRequest, PullRequestIdentifier } from './types'
-import { CodeHostingProviderAPIWrapper } from './codeHostingProviderAPIWrapper'
+import { MergePullRequestResponse, PullRequestIdentifier } from './types'
+import { WrapperInterface } from './wrapper.interface'
+import { PullRequest } from '../../pullRequest/domain/models/pullRequestTypes'
+import { Helper } from '../helper'
 
 require('dotenv').config()
 
 @injectable()
-export class GithubWrapper implements CodeHostingProviderAPIWrapper {
+export class GithubWrapper implements WrapperInterface {
   private octokit
 
   constructor () {
-    this.octokit = new Octokit({ auth: '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' })
+    this.octokit = new Octokit({ auth: process.env.GITHUB_API })
   }
 
   async checkAuth (): Promise<string> {
@@ -29,7 +31,7 @@ export class GithubWrapper implements CodeHostingProviderAPIWrapper {
 
     const isMergeable = await this.isMergeable({ repoName: id.repoName, pullRequestId: id.pullRequestId })
 
-    return this.mapPullRequest(rawPullRequest.data, id.repoName, isMergeable)
+    return Helper.mapGithubPullRequest(rawPullRequest.data, id.repoName, isMergeable)
   }
 
   async getPullRequestListByRepositoryName (repoName: string): Promise<PullRequest[]> {
@@ -43,8 +45,7 @@ export class GithubWrapper implements CodeHostingProviderAPIWrapper {
 
     for (const rawPullRequest of response.data) {
       const isMergeable = await this.isMergeable({ repoName, pullRequestId: rawPullRequest.number })
-
-      pullRequestList.push(this.mapPullRequest(rawPullRequest.data, repoName, isMergeable))
+      pullRequestList.push(Helper.mapGithubPullRequest(rawPullRequest, repoName, isMergeable))
     }
 
     return pullRequestList
@@ -66,19 +67,5 @@ export class GithubWrapper implements CodeHostingProviderAPIWrapper {
     })
 
     return response.data.mergeable
-  }
-
-  mapPullRequest (rawPullRequest: GithubPullRequest, repoName: string, isMergeable: boolean): PullRequest {
-    return {
-      id: rawPullRequest.id,
-      repository: {
-        name: repoName
-      },
-      title: rawPullRequest.title,
-      description: rawPullRequest.body,
-      isMergeable,
-      status: rawPullRequest.state,
-      createdAt: rawPullRequest.created_at
-    }
   }
 }

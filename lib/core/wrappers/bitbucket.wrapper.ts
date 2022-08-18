@@ -1,11 +1,14 @@
 import { injectable } from 'tsyringe'
-import { MockBitbucketClient, BitbucketPullRequest, PullRequestIdentifier } from '../../bitbucketMockAPI'
-import { CodeHostingProviderAPIWrapper } from './codeHostingProviderAPIWrapper'
-import { MergePullRequestResponse, PullRequest } from './types'
+import { BitbucketPullRequest, MockBitbucketClient, PullRequestIdentifier } from '../../bitbucketMockAPI'
+import { WrapperInterface } from './wrapper.interface'
+import { MergePullRequestResponse } from './types'
+import { PullRequest } from '../../pullRequest/domain/models/pullRequestTypes'
+import { Helper } from '../helper'
+
 require('dotenv').config()
 
 @injectable()
-export class BitbucketWrapper implements CodeHostingProviderAPIWrapper {
+export class BitbucketWrapper implements WrapperInterface {
   async checkAuth (): Promise<string> {
     return `Hello, ${process.env.OWNER}`
   }
@@ -13,7 +16,7 @@ export class BitbucketWrapper implements CodeHostingProviderAPIWrapper {
   async getPullRequestById (id: PullRequestIdentifier): Promise<PullRequest> {
     const rawPullRequest: BitbucketPullRequest = await MockBitbucketClient.getPullRequest(id)
 
-    return this.mapPullRequest(rawPullRequest)
+    return Helper.mapBitbucketPullRequest(rawPullRequest)
   }
 
   async getPullRequestListByRepositoryName (repositoryName: string): Promise<PullRequest[]> {
@@ -21,7 +24,7 @@ export class BitbucketWrapper implements CodeHostingProviderAPIWrapper {
     const pullRequestList: PullRequest[] = []
 
     for (const rawPullRequest of response) {
-      pullRequestList.push(this.mapPullRequest(rawPullRequest))
+      pullRequestList.push(Helper.mapBitbucketPullRequest(rawPullRequest))
     }
 
     return pullRequestList
@@ -33,19 +36,5 @@ export class BitbucketWrapper implements CodeHostingProviderAPIWrapper {
 
   async isMergeable (id: PullRequestIdentifier): Promise<boolean> {
     return await MockBitbucketClient.isPullRequestMergeable(id)
-  }
-
-  mapPullRequest (rawPullRequest: BitbucketPullRequest): PullRequest {
-    return {
-      id: rawPullRequest.id,
-      repository: {
-        name: rawPullRequest.repository.name
-      },
-      title: rawPullRequest.title,
-      description: rawPullRequest.description,
-      isMergeable: rawPullRequest.isMergeable,
-      status: rawPullRequest.status,
-      createdAt: rawPullRequest.createdAt
-    }
   }
 }
