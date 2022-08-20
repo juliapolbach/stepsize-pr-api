@@ -1,10 +1,14 @@
 import { inject, injectable } from 'tsyringe'
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { GetTrackedPullRequest } from '../application/getTrackedPullRequest.case'
+import { CodeHostingProvider, PullRequestTrackRequest } from '../domain/models/pullRequestTypes'
 import { TrackAPullRequest } from '../application/trackAPullRequest.case'
-import { PullRequestTrackRequest } from '../domain/models/pullRequestTypes'
+import { MergeAPullRequest } from '../application/mergeAPullRequest.case'
+import { PullRequestIdentifier } from '../../core/wrappers/types'
 
-type Request = FastifyRequest<{Params: {param: string, value?: string, body?: PullRequestTrackRequest }, Querystring: any }>
+type Request = FastifyRequest<{ Params: {param: string, value? }, Querystring: any }>
+type TrackRequest = FastifyRequest<{ Body: { repositoryName: string, pullRequestNumber: number, codeHostingProvider: CodeHostingProvider }; }>
+type MergeRequest = FastifyRequest<{ Params: {repository: string, id: number }, Querystring: any }>
 
 // Controllers are the entry point 🚪 of any query
 // and led the request to the services defined
@@ -14,19 +18,25 @@ type Request = FastifyRequest<{Params: {param: string, value?: string, body?: Pu
 export class PullRequestController {
   constructor (
     @inject(GetTrackedPullRequest) private getTrackedPullRequestCase: GetTrackedPullRequest,
-    @inject(TrackAPullRequest) private trackAPullRequestCase: TrackAPullRequest
+    @inject(TrackAPullRequest) private trackAPullRequestCase: TrackAPullRequest,
+    @inject(MergeAPullRequest) private mergeAPullRequestCase: MergeAPullRequest
+
   ) {
   }
 
-  getPullRequestsByRepositoryName (request: FastifyRequest<{Params: {param: string, value?: string }, Querystring: any }>, reply: FastifyReply): Promise<void> {
-    return this.getPullRequest(request, reply)
+  getPullRequestsByRepositoryName (request: Request, reply: FastifyReply): Promise<void> {
+    return this.getPullRequestList(request, reply)
   }
 
-  trackAPullRequestById (request: FastifyRequest<{Params: {param: string, value?: string }, Querystring: any }>, reply: FastifyReply): Promise<void> {
+  trackAPullRequestById (request: TrackRequest, reply: FastifyReply): Promise<void> {
     return this.trackAPullRequest(request, reply)
   }
 
-  private async getPullRequest (request: Request, reply: FastifyReply): Promise<void> {
+  mergeAPullRequestById (request: MergeRequest, reply: FastifyReply): Promise<void> {
+    return this.mergeAPullRequest(request, reply)
+  }
+
+  private async getPullRequestList (request: Request, reply: FastifyReply): Promise<void> {
     try {
       const response = await this.getTrackedPullRequestCase.exec()
 
@@ -45,18 +55,39 @@ export class PullRequestController {
     }
   }
 
-  private async trackAPullRequest (request: Request, reply: FastifyReply): Promise<void> {
+  private async trackAPullRequest (request: TrackRequest, reply: FastifyReply): Promise<void> {
     try {
       const input: PullRequestTrackRequest = {
-        // @ts-ignore
         repositoryName: request.body.repositoryName,
-        // @ts-ignore
         pullRequestNumber: request.body.pullRequestNumber,
-        // @ts-ignore
         codeHostingProvider: request.body.codeHostingProvider
       }
 
       const response = await this.trackAPullRequestCase.exec(input)
+
+      reply.status(200).send({
+        statusCode: 200,
+        data: response
+      })
+      request.log.info('OK')
+    } catch (error: any) {
+      reply.status(500).send({
+        statusCode: 500,
+        error: 'Unexpected error',
+        message: error.message
+      })
+      request.log.error(error.message)
+    }
+  }
+
+  private async mergeAPullRequest (request: MergeRequest, reply: FastifyReply): Promise<void> {
+    try {
+      const input:PullRequestIdentifier = {
+        repoName: request.params.repository,
+        pullRequestId: request.params.id
+      }
+
+      const response = await this.mergeAPullRequestCase.exec(input)
 
       reply.status(200).send({
         statusCode: 200,
