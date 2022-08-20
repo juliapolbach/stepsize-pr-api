@@ -11,7 +11,7 @@ describe('Github Wrapper should', () => {
     it('given an id, return a PullRequest', async () => {
       const response = await new GithubWrapper().getPullRequestById({ repoName: 'repository-1', pullRequestId: 5 })
 
-      expect(response.id).toEqual(1028768242)
+      expect(response.id).toEqual(5)
       expect(response.title).toEqual('✨ Add new cool feature')
       expect(response.isMergeable).toEqual(true)
     })

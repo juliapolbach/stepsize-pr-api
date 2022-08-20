@@ -8,7 +8,6 @@ import { WrapperInterface } from '../../core/wrappers/wrapper.interface'
 import { BitbucketWrapper } from '../../core/wrappers/bitbucket.wrapper'
 
 type Input = any
-
 type Output = Promise<PullRequest[]>
 
 @injectable()
@@ -27,6 +26,7 @@ export class GetTrackedPullRequest implements UseCase<Input, Output> {
     for (const trackedPullRequest of trackedPullRequestList) {
       // Consider 'merged' as final state and return data stored in database.
       if (trackedPullRequest.status === Status.merged) {
+        trackedPullRequest.isMergeable = false
         updatedPullRequestList.push(trackedPullRequest)
       } else {
         // Check for updates for 'open' and 'closed' states.
@@ -40,8 +40,12 @@ export class GetTrackedPullRequest implements UseCase<Input, Output> {
           const id = { repoName: trackedPullRequest.repository.name, pullRequestId: trackedPullRequest.id }
           await this.pullRequestRepository.updatePullRequest(id, hostedPullRequest)
           const updatedPullRequest = await this.pullRequestRepository.getTrackedPullRequestById(id)
-          updatedPullRequestList.push(updatedPullRequest)
+          if (updatedPullRequest) {
+            updatedPullRequest.isMergeable = hostedPullRequest.isMergeable
+            updatedPullRequestList.push(updatedPullRequest)
+          }
         } else {
+          trackedPullRequest.isMergeable = hostedPullRequest.isMergeable
           updatedPullRequestList.push(trackedPullRequest)
         }
       }

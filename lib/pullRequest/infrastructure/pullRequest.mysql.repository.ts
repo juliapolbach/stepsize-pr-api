@@ -8,7 +8,7 @@ import { PullRequestIdentifier } from '../../core/wrappers/types'
 export class PullRequestMysqlRepository implements PullRequestRepository {
   constructor () {}
 
-  async getTrackedPullRequestList (): Promise<PullRequest[]> {
+  async getTrackedPullRequestList (): Promise<PullRequest[] | []> {
     const db = new MySQLDatasource()
     const pullRequestList: PullRequest[] = []
 
@@ -26,7 +26,7 @@ export class PullRequestMysqlRepository implements PullRequestRepository {
     return pullRequestList
   }
 
-  async getTrackedPullRequestById (id: PullRequestIdentifier): Promise<PullRequest> {
+  async getTrackedPullRequestById (id: PullRequestIdentifier): Promise<PullRequest | null> {
     const db = new MySQLDatasource()
 
     const [rows] = await db.pool.query(
@@ -38,6 +38,7 @@ export class PullRequestMysqlRepository implements PullRequestRepository {
 
     const rawPullRequest = JSON.parse(JSON.stringify(rows))
 
+    if (rawPullRequest[0] === undefined) return null
     return Helper.mapDatabasePullRequest(rawPullRequest[0])
   }
 
@@ -50,6 +51,25 @@ export class PullRequestMysqlRepository implements PullRequestRepository {
            SET pr.title=?, pr.status=?
            WHERE r.name=? AND pr.pull_request_number=?;`,
       [pullRequest.title, pullRequest.status, id.repoName, id.pullRequestId]
+    )
+
+    await db.pool.end()
+  }
+
+  async trackPullRequest (pullRequest: PullRequest): Promise<void> {
+    const db = new MySQLDatasource()
+
+    const [repositoryCode] = await db.pool.query(
+      `SELECT id from repository r
+       WHERE r.name =?;`,
+      [pullRequest.repository.name]
+    )
+
+    await db.pool.query(
+      `INSERT INTO pull_request
+           (code_hosting_provider, pull_request_number, repository, title, status, description)
+           VALUES(?,?,?,?,?,?);`,
+      [pullRequest.codeHostingProvider, pullRequest.id, repositoryCode[0].id, pullRequest.title, pullRequest.status, pullRequest.description]
     )
 
     await db.pool.end()

@@ -12,7 +12,7 @@ export interface MergePullRequestResponse {
 }
 
 export interface GithubPullRequest {
-  id: number
+  number: number // PR's ID related to its repository, not the global GitHub ID
   repository: {
     name: string
   }
