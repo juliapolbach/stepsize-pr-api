@@ -18,4 +18,10 @@ export const pullRequestRoutes = (server: FastifyInstance) => {
     schema: SchemaValidatorRequestPayload,
     handler: pullRequestController.trackAPullRequestById.bind(pullRequestController)
   })
+  server.route({
+    url: '/api/pullrequest/:repository/:id/merge',
+    method: 'POST',
+    schema: SchemaValidatorWithParam,
+    handler: pullRequestController.mergeAPullRequestById.bind(pullRequestController)
+  })
 }

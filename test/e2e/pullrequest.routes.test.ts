@@ -27,6 +27,14 @@ describe('PullRequest routes:', () => {
     }
   }
 
+  const requestMergeOptions: InjectOptions = {
+    url: '/api/pullrequest/repository-2/4/merge',
+    method: 'POST',
+    headers: {
+      token: 'STEPSIZE'
+    }
+  }
+
   afterAll(async () => await finishServer())
 
   describe('Get PR by Repository Name should', () => {
@@ -61,6 +69,13 @@ describe('PullRequest routes:', () => {
          WHERE code_hosting_provider="${CodeHostingProvider.github}" AND pull_request_number=3;`
       )
       await db.pool.end()
+    })
+  })
+  describe('Merge PR by Id should', () => {
+    it('return status 200 with mandatory param', async () => {
+      const response = await server.inject(requestMergeOptions)
+
+      expect(response.statusCode).toBe(200)
     })
   })
 })

@@ -74,4 +74,8 @@ export class PullRequestMysqlRepository implements PullRequestRepository {
 
     await db.pool.end()
   }
+
+  async mergePullRequest (id: PullRequestIdentifier, pullRequest: PullRequest): Promise<void> {
+    await this.updatePullRequest(id, pullRequest)
+  }
 }
