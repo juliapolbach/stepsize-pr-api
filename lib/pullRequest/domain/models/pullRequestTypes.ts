@@ -21,3 +21,9 @@ export interface PullRequest {
   status: Status
   createdAt: Date
 }
+
+export interface PullRequestTrackRequest {
+  repositoryName: string,
+  pullRequestNumber: number,
+  codeHostingProvider: CodeHostingProvider
+}

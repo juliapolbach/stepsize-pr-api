@@ -1,7 +1,26 @@
+import { Status } from '../domain/models/pullRequestTypes'
+
+const pullRequestResponse = {
+  id: { type: 'number' },
+  codeHostingProvider: { type: 'enum' },
+  repository: { type: 'string' },
+  // title: { type: 'string' },
+  // description: { type: 'string' },
+  isMergeable: { type: 'boolean' },
+  status: {
+    type: 'enum',
+    description: 'The status of the Pull Request',
+    enum: [Status.open, Status.closed, Status.merged]
+  },
+  createdAt: { type: 'date' }
+}
+
 const response = {
   statusCode: { type: 'number' },
-  message: { type: 'string' }
+  message: { type: 'string' },
+  data: pullRequestResponse
 }
+
 const errorResponse = {
   statusCode: { type: 'number' },
   error: { type: 'string' },
@@ -26,7 +45,7 @@ const schemaResponse = {
     properties: response,
     default: {
       statusCode: 200,
-      message: 'Boilerplate API'
+      message: ''
     }
   },
   400: {
@@ -78,14 +97,16 @@ export const SchemaValidatorWithParam = {
   }
 }
 
-export const SchemaValidatorPost = {
+export const SchemaValidatorRequestPayload = {
   params,
   headers,
-  body: {
+  payload: {
     type: 'object',
     required: ['test'],
     properties: {
-      test: { type: 'string' }
+      repositoryName: { type: 'string' },
+      pullRequestNumber: { type: 'number' },
+      codeHostingProvider: { type: 'enum' }
     }
   },
   response: schemaResponse

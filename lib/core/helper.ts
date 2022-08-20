@@ -42,7 +42,7 @@ export class Helper {
 
   public static mapGithubPullRequest (rawPullRequest: GithubPullRequest, repoName: string, isMergeable: boolean): PullRequest {
     return {
-      id: rawPullRequest.id,
+      id: rawPullRequest.number,
       codeHostingProvider: CodeHostingProvider.github,
       repository: {
         name: repoName

@@ -1,7 +1,7 @@
 import { FastifyInstance } from 'fastify'
 import { PullRequestController } from './pullRequest.controller'
 import { container } from 'tsyringe'
-import { SchemaValidatorWithParam } from './pullRequest.schemaValidator'
+import { SchemaValidatorRequestPayload, SchemaValidatorWithParam } from './pullRequest.schemaValidator'
 
 // Define here all your API routes 🚴‍
 export const pullRequestRoutes = (server: FastifyInstance) => {
@@ -11,5 +11,11 @@ export const pullRequestRoutes = (server: FastifyInstance) => {
     method: 'GET',
     schema: SchemaValidatorWithParam,
     handler: pullRequestController.getPullRequestsByRepositoryName.bind(pullRequestController)
+  })
+  server.route({
+    url: '/api/pullrequest',
+    method: 'POST',
+    schema: SchemaValidatorRequestPayload,
+    handler: pullRequestController.trackAPullRequestById.bind(pullRequestController)
   })
 }
