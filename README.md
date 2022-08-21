@@ -89,8 +89,8 @@ TOKEN: STEPSIZE
          "name": "repository-1"
        },
       "title": "Fix endpoint status response",
-      "description": null,
-      "isMergeable": null,
+      "description": null',
+      "isMergeable": false,
       "status": "closed",
       "createdAt": "2022-08-16T16:12:17Z"
   }
