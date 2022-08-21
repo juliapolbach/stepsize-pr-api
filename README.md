@@ -39,11 +39,82 @@ All endpoints are secured with a basic non-expiring token. You must declare it o
 TOKEN: STEPSIZE
 ```
 
-Also, there is a **health-check endpoint** to check the availability of the server:
-```http://localhost:3000/health```
+- #### Health-check
+  There is a **health-check endpoint** to check the availability of the server:
+  endpoint : ```http://localhost:3000/health```
 
-And a Swagger UI /docs page:
-```http://localhost:3000/docs/static/index.html```
+  - #### Fetch all PR's by Repository name
+    endpoint : ```http://localhost:3000/api/pullrequest?repositoryName=repository-1```
+    ```
+    // response example
+  
+    {
+    "statusCode": 200,
+    "data": [
+      {
+        "id": 1,
+        "codeHostingProvider": "github",
+        "repository": {
+          "name": "repository-1"
+        },
+        "title": "Add info to README.md",
+        "description": "Add some useful info to the Readme.",
+        "isMergeable": false,
+        "createdAt": "2022-08-15T16:32:55.000Z",
+        "status": "merged"
+      },
+    ...
+    ```
+    - #### Track a pull request
+    endpoint : ```http://localhost:3000/api/pullrequest```
+    ```
+    // Body example
+  
+    {
+       "repositoryName": "repository-1",
+       "pullRequestNumber": 3,
+       "codeHostingProvider": "github"
+    }
+    ```
+      ```
+      // response example
+  
+      {
+    "statusCode": 200,
+    "data": {
+        "id": 3,
+        "codeHostingProvider": "github",
+        "repository": {
+           "name": "repository-1"
+         },
+        "title": "Fix endpoint status response",
+        "description": null,
+        "isMergeable": null,
+        "status": "closed",
+        "createdAt": "2022-08-16T16:12:17Z"
+    }
+    ```
+    - #### Fetch all PR's by Repository name
+    endpoint : ```http://localhost:3000/api/pullrequest/repository-1/5/merge```
+    ```
+    // response example
+  
+    {
+    "statusCode": 200,
+    "data": {
+        "id": 5,
+        "codeHostingProvider": "github",
+        "repository": {
+          "name": "repository-1"
+        },
+        "title": "Add new cool feature",
+        "description": "Add some new cool code.",
+        "isMergeable": false,
+        "createdAt": "2022-08-16T22:03:33.000Z",
+        "status": "merged"
+      }
+    ```
+
 
 ### GitHub Repository
 
