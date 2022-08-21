@@ -18,7 +18,7 @@ describe('Get tracked pull request case should', () => {
     const response = await new GetTrackedPullRequest(
       pullRequestMysqlRepository,
       githubWrapper,
-      bitbucketWrapper).exec()
+      bitbucketWrapper).exec('repository-1')
 
     expect(response[0].repository.name).toEqual('repository-1')
   })
@@ -33,7 +33,7 @@ describe('Get tracked pull request case should', () => {
     const response = await new GetTrackedPullRequest(
       pullRequestMysqlRepository,
       githubWrapper,
-      bitbucketWrapper).exec()
+      bitbucketWrapper).exec('repository-1')
 
     const pullRequest = response.find(pullRequest => pullRequest.repository.name === id.repoName && pullRequest.id === id.pullRequestId)
 
@@ -54,7 +54,7 @@ describe('Get tracked pull request case should', () => {
     const response = await new GetTrackedPullRequest(
       pullRequestMysqlRepository,
       githubWrapper,
-      bitbucketWrapper).exec()
+      bitbucketWrapper).exec('repository-1')
 
     const pullRequest = response.find(pullRequest => pullRequest.repository.name === id.repoName && pullRequest.id === id.pullRequestId)
 

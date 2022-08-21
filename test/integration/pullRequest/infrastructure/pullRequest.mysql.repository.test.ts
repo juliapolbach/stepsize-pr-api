@@ -8,7 +8,7 @@ import { MySQLDatasource } from '../../../../lib/core'
 
 describe('PullRequest mysql repository should', () => {
   it('return tracked PRs', async () => {
-    const response = await new PullRequestMysqlRepository().getTrackedPullRequestList()
+    const response = await new PullRequestMysqlRepository().getTrackedPullRequestList('repository-1')
 
     expect(response[0]).toHaveProperty('createdAt')
     expect(response[0]).toHaveProperty('description')
