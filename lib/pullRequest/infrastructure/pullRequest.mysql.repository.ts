@@ -1,24 +1,25 @@
 import { injectable } from 'tsyringe'
 import { Helper, MySQLDatasource } from '../../core'
 import { PullRequestRepository } from '../domain/pullRequest.repository'
-import { PullRequest } from '../domain/models/pullRequestTypes'
+import { PullRequest, RawPullRequest } from '../domain/models/pullRequestTypes'
 import { PullRequestIdentifier } from '../../core/wrappers/types'
 
 @injectable()
 export class PullRequestMysqlRepository implements PullRequestRepository {
   constructor () {}
 
-  async getTrackedPullRequestList (): Promise<PullRequest[] | []> {
+  async getTrackedPullRequestList (repositoryName: string): Promise<PullRequest[] | []> {
     const db = new MySQLDatasource()
     const pullRequestList: PullRequest[] = []
 
     const [rows] = await db.pool.query(
       `SELECT r.*, pr.* from repository r
-           INNER JOIN pull_request pr on pr.repository = r.id`)
+           INNER JOIN pull_request pr on pr.repository = r.id
+           WHERE name = ?`, [repositoryName])
 
     await db.pool.end()
 
-    const rawPullRequestList = JSON.parse(JSON.stringify(rows))
+    const rawPullRequestList: RawPullRequest[] = JSON.parse(JSON.stringify(rows))
 
     for (const rawPullRequest of rawPullRequestList) {
       pullRequestList.push(Helper.mapDatabasePullRequest(rawPullRequest))
@@ -36,7 +37,7 @@ export class PullRequestMysqlRepository implements PullRequestRepository {
 
     await db.pool.end()
 
-    const rawPullRequest = JSON.parse(JSON.stringify(rows))
+    const rawPullRequest: RawPullRequest = JSON.parse(JSON.stringify(rows))
 
     if (rawPullRequest[0] === undefined) return null
     return Helper.mapDatabasePullRequest(rawPullRequest[0])

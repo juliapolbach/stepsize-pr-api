@@ -6,7 +6,7 @@ import { TrackAPullRequest } from '../application/trackAPullRequest.case'
 import { MergeAPullRequest } from '../application/mergeAPullRequest.case'
 import { PullRequestIdentifier } from '../../core/wrappers/types'
 
-type Request = FastifyRequest<{ Params: {param: string, value? }, Querystring: any }>
+type GetRequest = FastifyRequest<{ Query: {repositoryName: string }, Querystring: any }>
 type TrackRequest = FastifyRequest<{ Body: { repositoryName: string, pullRequestNumber: number, codeHostingProvider: CodeHostingProvider }; }>
 type MergeRequest = FastifyRequest<{ Params: {repository: string, id: number }, Querystring: any }>
 
@@ -24,7 +24,7 @@ export class PullRequestController {
   ) {
   }
 
-  getPullRequestsByRepositoryName (request: Request, reply: FastifyReply): Promise<void> {
+  getPullRequestsByRepositoryName (request: GetRequest, reply: FastifyReply): Promise<void> {
     return this.getPullRequestList(request, reply)
   }
 
@@ -36,9 +36,11 @@ export class PullRequestController {
     return this.mergeAPullRequest(request, reply)
   }
 
-  private async getPullRequestList (request: Request, reply: FastifyReply): Promise<void> {
+  private async getPullRequestList (request: GetRequest, reply: FastifyReply): Promise<void> {
     try {
-      const response = await this.getTrackedPullRequestCase.exec()
+      // @ts-ignore
+      const input: string = request.query.repositoryName
+      const response = await this.getTrackedPullRequestCase.exec(input)
 
       reply.status(200).send({
         statusCode: 200,

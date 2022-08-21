@@ -22,6 +22,20 @@ export interface PullRequest {
   createdAt: Date
 }
 
+export interface RawPullRequest {
+  // eslint-disable-next-line camelcase
+  pull_request_number: number,
+  // eslint-disable-next-line camelcase
+  code_hosting_provider: CodeHostingProvider,
+  name: string
+  title: string
+  description: string
+  isMergeable: boolean | null
+  status: Status
+  // eslint-disable-next-line camelcase
+  creation_date: Date
+}
+
 export interface PullRequestTrackRequest {
   repositoryName: string,
   pullRequestNumber: number,

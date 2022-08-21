@@ -7,7 +7,7 @@ import { GithubWrapper } from '../../core/wrappers/github.wrapper'
 import { WrapperInterface } from '../../core/wrappers/wrapper.interface'
 import { BitbucketWrapper } from '../../core/wrappers/bitbucket.wrapper'
 
-type Input = any
+type Input = string
 type Output = Promise<PullRequest[]>
 
 @injectable()
@@ -19,8 +19,8 @@ export class GetTrackedPullRequest implements UseCase<Input, Output> {
     // When needed, add new CodeHostingProviders wrappers here
   ) {}
 
-  async exec (): Output {
-    const trackedPullRequestList: PullRequest[] = await this.pullRequestRepository.getTrackedPullRequestList()
+  async exec (input: Input): Output {
+    const trackedPullRequestList: PullRequest[] = await this.pullRequestRepository.getTrackedPullRequestList(input)
     const updatedPullRequestList: PullRequest[] = []
 
     for (const trackedPullRequest of trackedPullRequestList) {
