@@ -1,6 +1,6 @@
 import { injectable } from 'tsyringe'
 import { Octokit } from 'octokit'
-import { MergePullRequestResponse, PullRequestIdentifier } from './types'
+import { GithubPullRequest, MergePullRequestResponse, PullRequestIdentifier } from './types'
 import { WrapperInterface } from './wrapper.interface'
 import { PullRequest, Status } from '../../pullRequest/domain/models/pullRequestTypes'
 import { Helper } from '../helper'
@@ -46,8 +46,9 @@ export class GithubWrapper implements WrapperInterface {
     })
 
     const pullRequestList: PullRequest[] = []
+    const rawPullRequestList: GithubPullRequest[] = response.data
 
-    for (const rawPullRequest of response.data) {
+    for (const rawPullRequest of rawPullRequestList) {
       const isMergeable = await this.isMergeable({ repoName, pullRequestId: rawPullRequest.number })
       pullRequestList.push(Helper.mapGithubPullRequest(rawPullRequest, repoName, isMergeable))
     }

@@ -1,9 +1,9 @@
-import { CodeHostingProvider, PullRequest, Status } from '../pullRequest/domain/models/pullRequestTypes'
+import { CodeHostingProvider, PullRequest, RawPullRequest, Status } from '../pullRequest/domain/models/pullRequestTypes'
 import { BitbucketPullRequest } from '../bitbucketMockAPI'
 import { GithubPullRequest } from './wrappers/types'
 
 export class Helper {
-  public static mapStateToStatus (state) {
+  public static mapStateToStatus (state: string): Status {
     switch (state.toLowerCase()) {
       case 'open': return Status.open
       case 'closed': return Status.closed
@@ -12,7 +12,7 @@ export class Helper {
     }
   }
 
-  public static mapGitHubStateToStatus (state, merged) {
+  public static mapGitHubStateToStatus (state: string, merged: boolean): Status {
     // Determine that, if state is closed and PR was merged,
     // final state can be considered 'merged'
     if (state === 'closed' && merged) state = Status.merged
@@ -55,7 +55,7 @@ export class Helper {
     }
   }
 
-  public static mapDatabasePullRequest (rawPullRequest): PullRequest {
+  public static mapDatabasePullRequest (rawPullRequest: RawPullRequest): PullRequest {
     return {
       id: rawPullRequest.pull_request_number,
       codeHostingProvider: rawPullRequest.code_hosting_provider,

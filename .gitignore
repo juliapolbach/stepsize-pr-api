@@ -17,7 +17,7 @@ build/
 .vscode
 
 # Configuration enviroment
-.env
+# .env
 
 # Configuration docker
 docker_files/.alterna_docker.json
