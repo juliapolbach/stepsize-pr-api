@@ -28,9 +28,9 @@ port: 33060
 Execute ```npm install``` to install all the packages needed.
 ### The Server
 
-Execute ```npm start``` to start the server. It will be listening on ```http://localhost:3000```.
+Configuration of a _.env_ file is needed. Please use _.env.sample_ as a reference.
 
-For convenience, _.env_ file has been added to the repository project.
+Execute ```npm start``` to start the server. It will be listening on ```http://localhost:3000```.
 
 ### Endpoints
 
