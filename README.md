@@ -1,6 +1,6 @@
 # **Stepsize Pull Requests API**
 
-This project is a code proposal for Stepsize Backend take-home task. 
+This project is a code proposal for **Stepsize Backend take-home task**. 
 An API that integrates with any code hosting provider and allows users to track and merge pull requests, all in one place.
 
 It uses **Node.js** with **Fastify** and a **Mysql** database. Tested with **Jest**.
@@ -119,7 +119,7 @@ TOKEN: STEPSIZE
 
 ### GitHub Repository
 
-To assist with testing, I created a GitHub dummy repository: [repository-1](https://github.com/juliapolbach/repository-1/branches)
+To assist with testing, I created a GitHub dummy repository: [repository-1](https://github.com/juliapolbach/repository-1)
 ### Test and coverage
 
 The project is tested with Jest. You can run it executing ```npm run test```. 
@@ -144,25 +144,25 @@ In the ```/lib``` folder, code is organized by _core_ functionalities, such as:
 - Helpers
 - etc.
 
-and functionality by _entities_, in this case, all use cases relate to _Pull Request_ entity. Inside of this, you'll find:
+or organized by _entities_, in this case, the _Pull Request_ entity. Inside of its folder, you'll find:
 
-- ```/application```: with the 3 use cases related to each endpoint.
-- ```/domain```: Types and Interfaces
+- ```/application```: with three use cases related to each required endpoint.
+- ```/domain```: Types and Interfaces.
 - ```/infrastructure```: Controller, routes, and a repository to define all SQL raw interactions.  
 
-This specific project structure may seem a bit overdue, but if scalability is a goal, brake the
+This specific project structure may seem a bit overdue, but if **scalability is a goal**, braking the
 code in hierarchical classes, using interfaces, or extracting code host providers into wrappers may help when growing. 
-That way, adding or deleting a provider it's a safe process that won't (almost nothing) affect previous code.
+That way, adding or deleting a provider will be a safe process that won't (almost nothing) affect previous code.
 
 ### The logic
 
-One of the biggest challenges of the task was to determine the sweet spot between fetching data from the Database
+One of the **biggest challenges** of the task was to determine the sweet spot between fetching data from the Database
 (faster, but inconsistent) or directly from the code host provider's API (up-to-date) without polling.
 
 Because _on-demand_ was an imperative condition, I chose to call the APIs when needed to check the last Pull Request's _status_.
 
-But, to smooth things a little and avoid fetching and persisting lots of data in every call, I assumed that _merged_ Status is
-_final_ status, and no relevant changes will occur on that Pull Requests. This way, logic only calls to code host providers' APIs
+But, to smooth things a little and avoid fetching and persisting lots of data in every call, I assumed that **_merged_ Status is
+_final_ status**, and no relevant changes will occur on that Pull Requests. This way, logic only calls to code host providers' APIs
 when needed, in an attempt to keep the performance in good shape.
 
 
