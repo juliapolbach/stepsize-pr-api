@@ -10,7 +10,7 @@ It uses **Node.js** with **Fastify** and a **Mysql** database. Tested with **Jes
 These are the steps you need to follow for using this API:
 
 ### The Database
-Execute ```npm run create-db``` to mount a Mysql database. It has two tables,
+Execute ```npm run create-db``` to create a Mysql database. It has two tables,
 named _repository_ and _pull_request_, populated with some data.
 
 ```
@@ -133,7 +133,7 @@ Project directory structure is inspired by **SOLID principles** and **hexagonal 
 folder organization and smooth scalability.
 
 - ```/bin```: Contains the initial file _start.js_
-- ```/docker-db```: Contains all that is needed to mount the mysql DB.
+- ```/docker-db```: Contains all that is needed to create the mysql DB.
 - ```/lib```: Contains all the application code.
 - ```/test```: Contain all the application test.
 
